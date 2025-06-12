@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-deployment
+  namespace: laravel
+  labels:
+    app: laravel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laravel
+  template:
+    metadata:
+      labels:
+        app: laravel
+    spec:
+      containers:
+        - name: laravel
+          image: vishal2728/devopslaravel:d1
+          workingDir: /var/www/html/laravel-starter
+          command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: env-volume
+              mountPath: /var/www/html/laravel-starter/.env
+              subPath: .env
+      volumes:
+        - name: env-volume
+          configMap:
+            name: laravel-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: laravel-service
+  namespace: laravel
+spec:
+  type: NodePort
+  selector:
+    app: laravel
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 30080

@@ -1,0 +1,49 @@
+# MySQL Deployment using emptyDir
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: laravel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.7
+          env:
+            - name: MYSQL_DATABASE
+              value: laravel_starter
+            - name: MYSQL_USER
+              value: laravel_user
+            - name: MYSQL_PASSWORD
+              value: vishuanshi
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-data
+      volumes:
+        - name: mysql-data
+          emptyDir: {}
+---
+# MySQL Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: laravel
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306

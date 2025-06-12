@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: laravel-migrate
+  namespace: laravel
+spec:
+  template:
+    spec:
+      containers:
+        - name: migrate
+          image: vishal2728/devopslaravel:d1
+          workingDir: /var/www/html/laravel-starter
+          command: ["php", "artisan", "migrate", "--force"]
+          volumeMounts:
+            - name: env-volume
+              mountPath: /var/www/html/laravel-starter/.env
+              subPath: .env
+      restartPolicy: Never
+      volumes:
+        - name: env-volume
+          configMap:
+            name: laravel-env
