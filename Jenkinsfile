@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Code') {
             steps {
-                git url: 'https://github.com/Vishal2827/laravel-starter.git'
+                git url: 'https://github.com/Vishal2827/laravel-starter.git', branch: 'main'
             }
         }
 
