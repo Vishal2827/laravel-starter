@@ -87,7 +87,7 @@
                 </h1>
 
                 <p class="mb-8 leading-relaxed">
-                    Vishu Parjapat ,
+                    Parjapat ,
                     Laravel Starter.
                 </p>
             </div>
