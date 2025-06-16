@@ -18,13 +18,11 @@ spec:
       containers:
         - name: laravel
           image: vishal2728/devopslaravel:d1
-          workingDir: /var/www/html/laravel-starter
-          command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
           ports:
             - containerPort: 80
           volumeMounts:
             - name: env-volume
-              mountPath: /var/www/html/laravel-starter/.env
+              mountPath: /var/www/html/.env
               subPath: .env
           readinessProbe:
             httpGet:
@@ -56,6 +54,6 @@ spec:
     app: laravel
   ports:
     - protocol: TCP
-      port: 8000
-      targetPort: 8000
+      port: 80
+      targetPort: 80
       nodePort: 30080
