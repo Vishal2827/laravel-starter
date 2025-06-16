@@ -34,8 +34,8 @@ RUN apk add --no-cache php8 php8-fpm supervisor
 # Copy Laravel app from previous stage
 COPY --from=php /var/www/html /var/www/html
 
-# Copy Nginx config file (adjusted path)
-COPY laravel-k8s/nginx/default.conf /etc/nginx/conf.d/default.conf
+# ✅ Corrected path to Nginx config file
+COPY default.conf /etc/nginx/conf.d/default.conf
 
 # Set working directory
 WORKDIR /var/www/html
