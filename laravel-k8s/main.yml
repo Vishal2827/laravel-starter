@@ -21,11 +21,25 @@ spec:
           workingDir: /var/www/html/laravel-starter
           command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
           ports:
-            - containerPort: 8000
+            - containerPort: 80
           volumeMounts:
             - name: env-volume
               mountPath: /var/www/html/laravel-starter/.env
               subPath: .env
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 3
       volumes:
         - name: env-volume
           configMap:

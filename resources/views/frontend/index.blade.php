@@ -87,7 +87,7 @@
                 </h1>
 
                 <p class="mb-8 leading-relaxed">
-                    In the following section we listed a number of screenshots of different parts of the project,
+                    Parjapat ,
                     Laravel Starter.
                 </p>
             </div>

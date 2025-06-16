@@ -1,25 +1,47 @@
-FROM php:8.2-fpm
+# Stage 1: Build PHP dependencies
+FROM php:8.2-fpm as php
 
-# Install system dependencies and PHP extensions
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libonig-dev \
     && docker-php-ext-configure zip \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Set working directory INSIDE laravel-starter folder
-WORKDIR /var/www/html/laravel-starter
+# Set working directory
+WORKDIR /var/www/html
 
-# Copy everything into /var/www/html/laravel-starter
-COPY . /var/www/html/laravel-starter
+# Copy Laravel project into container
+COPY . /var/www/html
 
-# Mark project directory as safe for Git
-RUN git config --global --add safe.directory /var/www/html/laravel-starter
-
-# Install Composer and Laravel dependencies
+# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer && \
-    composer install
+    mv composer.phar /usr/local/bin/composer
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/laravel-starter && \
-    chmod -R 755 /var/www/html/laravel-starter
+# Install Laravel dependencies
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Set correct permissions
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html
+
+# -------------------------------------------
+# Stage 2: Add Nginx with PHP-FPM
+FROM nginx:alpine
+
+# Install PHP-FPM runtime
+RUN apk add --no-cache php8 php8-fpm supervisor
+
+# Copy Laravel app from previous stage
+COPY --from=php /var/www/html /var/www/html
+
+# Copy Nginx config file (adjusted path)
+COPY laravel-k8s/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Expose port for Nginx
+EXPOSE 80
+
+# Start both PHP-FPM and Nginx
+CMD ["sh", "-c", "php-fpm8 -D && nginx -g 'daemon off;'"]
