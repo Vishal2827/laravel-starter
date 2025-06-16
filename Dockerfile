@@ -1,5 +1,5 @@
 # -------- Stage 1: Laravel Build ----------
-FROM php:8.2-fpm as builder
+FROM php:8.2-fpm AS builder
 
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libonig-dev \
@@ -26,8 +26,8 @@ RUN apt-get update && apt-get install -y nginx supervisor
 COPY --from=builder /var/www/html /var/www/html
 
 # Copy Nginx config
-COPY default.conf /etc/nginx/sites-available/default
-RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+RUN rm -f /etc/nginx/sites-enabled/default && \
+    ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Copy supervisord config
 COPY laravel-k8s/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
