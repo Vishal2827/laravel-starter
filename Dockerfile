@@ -26,6 +26,8 @@ RUN apt-get update && apt-get install -y nginx supervisor
 COPY --from=builder /var/www/html /var/www/html
 
 # Copy Nginx config
+COPY default.conf /etc/nginx/sites-available/default
+
 RUN rm -f /etc/nginx/sites-enabled/default && \
     ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
