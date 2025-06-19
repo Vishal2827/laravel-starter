@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: laravel
-          image: vishal2728/devopslaravel:d1
+          image: vishal2728/devopslaravel:18
           ports:
             - containerPort: 80
           volumeMounts:
@@ -28,14 +28,14 @@ spec:
             httpGet:
               path: /
               port: 80
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 5
             failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /
               port: 80
-            initialDelaySeconds: 20
+            initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 3
       volumes:
