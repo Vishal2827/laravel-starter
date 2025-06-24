@@ -20,28 +20,7 @@ spec:
           image: vishal2728/devopslaravel:23
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: env-volume
-              mountPath: /var/www/html/.env
-              subPath: .env
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 30
-            periodSeconds: 5
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            failureThreshold: 3
-      volumes:
-        - name: env-volume
-          configMap:
-            name: laravel-env
+
 ---
 apiVersion: v1
 kind: Service
