@@ -15,11 +15,21 @@ spec:
       labels:
         app: laravel
     spec:
+      volumes:
+        - name: env-volume
+          configMap:
+            name: laravel-env
+
       containers:
         - name: laravel
-          image: vishal2728/devopslaravel:23
+          image: vishal2728/devopslaravel:25
           ports:
             - containerPort: 80
+          volumeMounts:
+            - name: env-volume
+              mountPath: /var/www/html/.env
+              subPath: .env
+
 
 ---
 apiVersion: v1
