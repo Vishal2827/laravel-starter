@@ -22,7 +22,7 @@ spec:
 
       containers:
         - name: laravel
-          image: vishal2728/devopslaravel:23
+          image: vishal2728/devopslaravel:27
           ports:
             - containerPort: 80
           volumeMounts:

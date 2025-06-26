@@ -25,14 +25,15 @@ RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 # -------- Stage 2: Production Image ----------
 FROM php:8.2-fpm
 
-# ✅ Install runtime + PHP build dependencies (including zip support)
+# ✅ Install MySQL driver + other extensions needed at runtime
 RUN apt-get update && apt-get install -y \
-    nginx supervisor procps unzip zip libzip-dev \
+    nginx supervisor procps unzip zip libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libonig-dev \
+    default-mysql-client \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install zip \
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Add missing PHP-FPM config (if not present)
+# Add missing PHP-FPM config (optional fallback)
 RUN mkdir -p /usr/local/etc/php-fpm.d && echo "\
 [www]\n\
 user = www-data\n\
